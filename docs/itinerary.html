@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>详细行程 - 新墨西哥行程规划</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .nav-button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 25px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            border: 2px solid white;
+        }
+
+        .nav-button:hover {
+            background: white;
+            color: #667eea;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .day-block {
+            margin-bottom: 40px;
+            border-left: 5px solid #667eea;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .day-block:hover {
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.2);
+            transform: translateX(5px);
+        }
+
+        .day-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            gap: 15px;
+        }
+
+        .day-number {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        .day-info h2 {
+            color: #333;
+            font-size: 1.4em;
+            margin-bottom: 5px;
+        }
+
+        .day-info p {
+            color: #666;
+            font-size: 1em;
+        }
+
+        .route-info {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #45B7D1;
+        }
+
+        .route-info strong {
+            color: #45B7D1;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .timeline {
+            margin-top: 20px;
+        }
+
+        .timeline-item {
+            display: flex;
+            margin-bottom: 15px;
+            gap: 20px;
+        }
+
+        .time {
+            background: white;
+            color: #667eea;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-weight: bold;
+            min-width: 100px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .activity {
+            flex: 1;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 3px solid #667eea;
+        }
+
+        .activity-title {
+            color: #333;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .activity-detail {
+            color: #666;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+
+        .highlight {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            color: #333;
+        }
+
+        .highlight strong {
+            color: #ff9800;
+        }
+
+        .tips {
+            background: #e3f2fd;
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            color: #1565c0;
+            font-size: 0.95em;
+        }
+
+        .tips strong {
+            color: #1565c0;
+        }
+
+        .accommodation {
+            background: #e8f5e9;
+            border-left: 4px solid #4CAF50;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            color: #2e7d32;
+        }
+
+        .accommodation strong {
+            color: #2e7d32;
+        }
+
+        .distance-info {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            margin-top: 10px;
+        }
+
+        .summary-box {
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            border: 2px solid #667eea;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 40px;
+        }
+
+        .summary-box h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .summary-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .summary-item .emoji {
+            font-size: 2em;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .summary-item strong {
+            color: #667eea;
+            display: block;
+            font-size: 1.1em;
+        }
+
+        .summary-item span {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .footer {
+            background: #f5f5f5;
+            padding: 30px;
+            text-align: center;
+            color: #666;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .day-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .timeline-item {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .time {
+                width: 100%;
+            }
+
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📅 详细行程</h1>
+            <p>2025年11月25日 - 11月29日</p>
+            <a href="index.html" class="nav-button">← 返回主页</a>
+        </div>
+
+        <div class="content">
+            <div class="summary-box">
+                <h3>🎯 行程概览</h3>
+                <div class="summary-grid">
+                    <div class="summary-item">
+                        <span class="emoji">📍</span>
+                        <strong>4个主要城市</strong>
+                        <span>ABQ / White Sands / Carlsbad / Santa Fe</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="emoji">🚗</span>
+                        <strong>总里程</strong>
+                        <span>约 1000 英里</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="emoji">🏨</span>
+                        <strong>4晚住宿</strong>
+                        <span>4个不同地点</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="emoji">⭐</span>
+                        <strong>主要景点</strong>
+                        <span>3个国家公园</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Day 1 -->
+            <div class="day-block">
+                <div class="day-header">
+                    <div class="day-number">1</div>
+                    <div class="day-info">
+                        <h2>11月25日 (星期二) 星期二</h2>
+                        <p>ABQ → White Sands 日落 → Alamogordo</p>
+                    </div>
+                </div>
+
+                <div class="route-info">
+                    <strong>🚗 路线：ABQ 机场 → White Sands → Alamogordo</strong>
+                    距离：约 223 英里 | 驾驶时间：3.5-4 小时
+                    <span class="distance-info">取车 + 午餐 + 景观 = 充实一天</span>
+                </div>
+
+                <div class="highlight">
+                    <strong>✨ 当天重点：</strong><br>
+                    白沙国家公园日落（最美光线）、适应时差、轻松开车
+                </div>
+
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="time">11:40</div>
+                        <div class="activity">
+                            <div class="activity-title">✈️ 抵达 ABQ 机场</div>
+                            <div class="activity-detail">下飞机、过关、取行李</div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="time">12:00-12:30</div>
+                        <div class="activity">
+                            <div class="activity-title">🚗 Hertz 租车</div>
+                            <div class="activity-detail">
+                                确认号：L4022080249<br>
+                                检查划痕、轮胎、油量、车钥匙<br>
+                                📸 建议拍 4 个角的照片作为证据
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="time">12:30-13:15</div>
+                        <div class="activity">
+                            <div class="activity-title">🍽️ 午餐 + 补充物资</div>
+                            <div class="activity-detail">
+                                在机场附近或 ABQ 市区吃午餐<br>
+                                购买：水、零食、防晒霜、地图
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="time">13:15</div>
+                        <div class="activity">
+                            <div class="activity-title">🗺️ 出发前往 White Sands</div>
+                            <div class="activity-detail">
+                                路线：I-25S → US-380E → US-54S<br>
+                                约 3.5-4 小时车程
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="time">16:30-18:30</div>
+                        <div class="activity">
+                            <div class="activity-title">🏜️ White Sands 国家公园</div>
+                            <div class="activity-detail">
+                                进入 Dunes Drive，深入沙丘<br>
+                                拍照、玩耍、等待日落<br>
+                                💡 建议 5-6 点时拍照，光线最美<br>
+                                坐标：32.7793, -106.1717
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="time">18:30-19:00</div>
+                        <div class="activity">
+                            <div class="activity-title">🚗 返回 Alamogordo</div>
+                            <div class="activity-detail">开车回酒店，约 30 分钟</div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="time">19:00+</div>
+                        <div class="activity">
+                            <div class="activity-title">🏨 入住 + 晚餐</div>
+                            <div class="activity-detail">
+                                酒店：SureStay Plus by Best Western<br>
+                                地址：1020 S White Sands Blvd, Alamogordo<br>
+                                休息、吃饭、适应时差
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tips">
+                    <strong>💡 第一天小贴士：</strong><br>
+                    • 时差调整可能会疲劳，下午别开太长时间<br>
+                    • 白沙日出日落都很美，如果精力充足可以看两次<br>
+                    • 保持油量在 1/2 以上（南部加油站稀疏）<br>
+                    • 偏光墨镜必备，白沙反光很强
+                </div>
+            </div>
+
+            <!-- Day 2 -->
+            <div class="day-block">
+                <div class="day-header">
+                    <div class="day-number">2</div>
+                    <div class="day-info">
+                        <h2>11月26日 (星期三)</h2>
+                        <p>Alamogordo → Carlsbad Caverns → Roswell</p>
+                    </div>
+                </div>
+
+                <div class="route-info">
+                    <strong>🚗 路线：Alamogordo → Cloudcroft → Carlsbad → Roswell</strong>
+                    总距离：约 4.5 小时 | 特色：山路 + 洞穴探险
+                    <span class="distance-info">景观最多元的一天</span>
+                </div>
+
+                <div class="highlight">
+                    <strong>✨ 当天重点：</strong><br>
+                    Carlsbad Caverns 洞穴参观（提前预约必做）、山路驾驶体验
+                </div>
+
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="time">08:00-09:00</div>
+                        <div class="activity">
+                            <div class="activity-title">🌅 White Sands 二刷（可选）</div>
+                            <div class="activity-detail">
+                                晨光最柔和，适合补拍照片<br>
+                                如果前一天拍够了可以跳过
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="time">09:15</div>
+                        <div class="activity">
+                            <div class="activity-title">🚗 出发去 Carlsbad</div>
+                            <div class="activity-detail">
+                                路线：US-82 山路（经过 Cloudcroft）<br>
+                                ⚠️ 山路，可能有轻度结冰，注意慢行<br>
+                                景观很好，如果有时间可停留拍照
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="time">12:00</div>
+                        <div class="activity">
+                            <div class="activity-title">🕳️ 抵达 Carlsbad Caverns Visitor Center</div>
+                            <div class="activity-detail">
+                                坐标：32.1756, -104.4426<br>
+                                先到 Visitor Center 登记、看介绍
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="time">13:00-15:00</div>
+                        <div class="activity">
+                            <div class="activity-title">🦇 Carlsbad Caverns - Big Room 自助路线</div>
+                            <div class="activity-detail">
+                                ⭐ 最经典路线（约 1-1.5 小时）<br>
+                                📸 光线昏暗，建议带手电筒<br>
+                                🌡️ 洞内温度约 56°F (13°C)，穿个外套<br>
+                                票价：已提前预约<br>
+                                💡 走不动可以坐电梯上来
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="time">15:00-15:30</div>
+                        <div class="activity">
+                            <div class="activity-title">☕ 休息 + 吃点零食</div>
+                            <div class="activity-detail">
+                                Visitor Center 有简单的咖啡厅<br>
+                                补充水分、休息腿脚
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="time">16:00-17:30</div>
+                        <div class="activity">
+                            <div class="activity-title">🚗 开车去 Roswell</div>
+                            <div class="activity-detail">
+                                路线：US-285 北上<br>
+                                距离：约 1.5-2 小时<br>
+                                平坦直路，轻松驾驶
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="time">17:30</div>
+                        <div class="activity">
+                            <div class="activity-title">🏨 入住 Roswell Inn</div>
+                            <div class="activity-detail">
+                                地址：2101 N Main St, Roswell, NM<br>
+                                小镇安静，适合休息
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="time">18:30+</div>
+                        <div class="activity">
+                            <div class="activity-title">🍽️ 晚餐</div>
+                            <div class="activity-detail">
+                                注意：Roswell 大多餐厅 19:00 关门<br>
+                                尽量早一点吃<br>
+                                如果没找到好的，可以便利店买点东西
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tips">
+                    <strong>💡 第二天小贴士：</strong><br>
+                    • Carlsbad 门票一定要提前预约！<br>
+                    • 洞穴内光线暗，带上手电筒或头灯<br>
+                    • 洞内温度低，带一件外套<br>
+                    • Cloudcroft 山路要小心，特别是冬天<br>
+                    • Roswell 是个小镇，不要期待太多夜生活
+                </div>
+            </div>
+
+            <!-- Day 3 -->
+            <div class="day-block">
+                <div class="day-header">
+                    <div class="day-number">3</div>
+                    <div class="day-info">
+                        <h2>11月27日 (星期四) 感恩节</h2>
+                        <p>Roswell → ABQ → Sandia Peak Tram</p>
+                    </div>
+                </div>
+
+                <div class="route-info">
+                    <strong>🚗 路线：Roswell → ABQ → Sandia Peak</strong>
+                    距离：190 英里 Roswell→ABQ | 驾驶时间：3 小时
+                    <span class="distance-info">感恩节特别安排</span>
+                </div>
+
+                <div class="highlight">
+                    <strong>✨ 当天重点：</strong><br>
+                    感恩节各国家公园均关闭，城市 & Sandia 是最佳选择！
+                </div>
+
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="time">08:30</div>
+                        <div class="activity">
+                            <div class="activity-title">🚗 离开 Roswell</div>
+                            <div class="activity-detail">
+                                沿 US-285 北上<br>
+                                平坦直路，驾驶轻松<br>
+                                预计 3 小时到达 ABQ
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="time">10:30</div>
+                        <div class="activity">
+                            <div class="activity-title">🏠 抵达 ABQ Airbnb</div>
+                            <div class="activity-detail">
+                                地址：Old Town 附近（房东提供具体门牌）<br>
+                                多数支持自助入住<br>
+                                放行李、稍作休息
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="time">11:30-14:00</div>
+                        <div class="activity">
+                            <div class="activity-title">🏘️ Old Town 散步 + 午餐</div>
+                            <div class="activity-detail">
+                                逛古城街道、看教堂和广场<br>
+                                在当地咖啡厅喝咖啡<br>
+                                找地方吃感恩节午餐<br>
+                                坐标：35.08, -106.65
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="time">15:30</div>
+                        <div class="activity">
+                            <div class="activity-title">🚡 抵达 Sandia Peak Tram Base</div>
+                            <div class="activity-detail">
+                                坐标：35.1910, -106.4860<br>
+                                停车、买票（已预约）<br>
+                                准备好外套和相机
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="time">16:00-17:00</div>
+                        <div class="activity">
+                            <div class="activity-title">🚡 Sandia Peak Tram 上山</div>
+                            <div class="activity-detail">
+                                坐缆车到山顶（约 15 分钟）<br>
+                                山顶海拔 10,678 英尺<br>
+                                温度比市区低 10-12°C<br>
+                                ⚠️ 一定要穿厚外套！
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="time">17:00-18:00</div>
+                        <div class="activity">
+                            <div class="activity-title">🌅 山顶看日落</div>
+                            <div class="activity-detail">
+                                360 度全景视野<br>
+                                俯瞰整个 ABQ 城市<br>
+                                日落时刻最美<br>
+                                💡 下去前检查缆车时间
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="time">18:00-18:30</div>
+                        <div class="activity">
+                            <div class="activity-title">🚡 坐缆车下山</div>
+                            <div class="activity-detail">返回 Tram Base，驾车回市区</div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="time">18:30+</div>
+                        <div class="activity">
+                            <div class="activity-title">🍽️ 晚餐</div>
+                            <div class="activity-detail">
+                                在 ABQ 市区找感恩节还开门的餐厅<br>
+                                或者回 Airbnb 自己做点东西
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="time">20:00</div>
+                        <div class="activity">
+                            <div class="activity-title">😴 回 Airbnb 休息</div>
+                            <div class="activity-detail">
+                                充电、洗澡、准备明天的圣塔菲之行
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accommodation">
+                    <strong>🏠 住宿：Airbnb in ABQ Old Town</strong><br>
+                    位置：Old Town 附近<br>
+                    优势：免费停车、安静安全、开车 5-10 min 到 Old Town/Downtown
+                </div>
+
+                <div class="tips">
+                    <strong>💡 第三天小贴士：</strong><br>
+                    • 感恩节很多景点关闭，但城市和 Sandia 照常开放<br>
+                    • Sandia Peak 很冷，一定要穿羽绒服<br>
+                    • 日落前 30 分钟到达最好<br>
+                    • 山顶风大，防晒和防风都很重要<br>
+                    • 缆车可能等队，提前 15-30 分钟到达
+                </div>
+            </div>
+
+            <!-- Day 4 -->
+            <div class="day-block">
+                <div class="day-header">
+                    <div class="day-number">4</div>
+                    <div class="day-info">
+                        <h2>11月28日 (星期五)</h2>
+                        <p>ABQ → Santa Fe 一日游 → ABQ</p>
+                    </div>
+                </div>
+
+                <div class="route-info">
+                    <strong>🚗 路线：ABQ ↔ Santa Fe（往返）</strong>
+                    单程距离：65 英里 | 驾驶时间：单程约 1 小时
+                    <span class="distance-info">艺术、文化、美食完美一日游</span>
+                </div>
+
+                <div class="highlight">
+                    <strong>✨ 当天重点：</strong><br>
+                    艺术、文化、美食一日游 - Santa Fe 是新墨西哥的灵魂！
+                </div>
+
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="time">08:30</div>
+                        <div class="activity">
+                            <div class="activity-title">🚗 从 ABQ 出发</div>
+                            <div class="activity-detail">
+                                上 I-25 北上<br>
+                                目标：Santa Fe Plaza<br>
+                                预计 1 小时到达
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="time">09:30</div>
+                        <div class="activity">
+                            <div class="activity-title">📍 抵达 Santa Fe Plaza</div>
+                            <div class="activity-detail">
+                                坐标：35.6870, -105.9378<br>
+                                停车（Plaza 周围有停车场）<br>
+                                散步、看教堂、逛广场<br>
+                                这是 Santa Fe 的中心，必看！
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="time">11:00-13:00</div>
+                        <div class="activity">
+                            <div class="activity-title">🖼️ Canyon Road 画廊街</div>
+                            <div class="activity-detail">
+                                距离 Plaza 不远，开车或走路都行<br>
+                                著名的艺术街，两侧都是精品画廊<br>
+                                慢慢逛，拍照，感受艺术氛围<br>
+                                💡 大部分画廊免费进入<br>
+                                如果饿了可以在街边咖啡厅坐坐
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="time">13:30-15:00</div>
+                        <div class="activity">
+                            <div class="activity-title">🎨 Georgia O'Keeffe Museum</div>
+                            <div class="activity-detail">
+                                坐标：35.6896, -105.9397<br>
+                                著名美国画家的美术馆<br>
+                                需要提前买票（在线购票更便宜）<br>
+                                展览很值得看，约 1-1.5 小时
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="time">15:30-17:00</div>
+                        <div class="activity">
+                            <div class="activity-title">🎭 Meow Wolf（沉浸式艺术）</div>
+                            <div class="activity-detail">
+                                坐标：35.6521, -105.9995<br>
+                                超酷的互动艺术装置<br>
+                                ⭐ 一定要提前预约！<br>
+                                允许自由探索、拍照<br>
+                                1.5-2 小时可以逛完<br>
+                                💡 很多年轻人喜欢，拍照很出片
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="time">17:30+</div>
+                        <div class="activity">
+                            <div class="activity-title">🍽️ 晚餐</div>
+                            <div class="activity-detail">
+                                Santa Fe 美食多，选择很多<br>
+                                推荐试试当地新墨西哥菜<br>
+                                或者精致的 Farm-to-table 餐厅<br>
+                                务必提前预约！Santa Fe 很火
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="time">18:30-20:00</div>
+                        <div class="activity">
+                            <div class="activity-title">🚗 返回 ABQ</div>
+                            <div class="activity-detail">
+                                沿 I-25 南下<br>
+                                预计 1 小时到达 Airbnb<br>
+                                夜间驾驶，注意安全
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tips">
+                    <strong>💡 第四天小贴士：</strong><br>
+                    • Georgia O'Keeffe Museum 和 Meow Wolf 都要提前预约<br>
+                    • Santa Fe 餐厅强烈建议提前预约<br>
+                    • Canyon Road 有很多小咖啡馆，累了可以休息<br>
+                    • Santa Fe 海拔高（7000 英尺），可能有轻微高反，多喝水<br>
+                    • 如果时间紧张，可以跳过某个景点，重点是感受城市氛围
+                </div>
+            </div>
+
+            <!-- Day 5 -->
+            <div class="day-block">
+                <div class="day-header">
+                    <div class="day-number">5</div>
+                    <div class="day-info">
+                        <h2>11月29日 (星期六)</h2>
+                        <p>ABQ 市区轻松逛 → 还车 → 返回费城</p>
+                    </div>
+                </div>
+
+                <div class="route-info">
+                    <strong>📍 重点：轻松、不赶时间、安全还车</strong>
+                    下午还车，晚上夜航返回
+                    <span class="distance-info">完美的行程收尾</span>
+                </div>
+
+                <div class="highlight">
+                    <strong>✨ 当天重点：</strong><br>
+                    保持轻松，按时还车、吃好准备夜航
+                </div>
+
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="time">09:00-13:00</div>
+                        <div class="activity">
+                            <div class="activity-title">🏘️ ABQ 市区自由活动</div>
+                            <div class="activity-detail">
+                                选项 A：Old Town / Nob Hill 逛街<br>
+                                - Old Town：传统街区，看教堂、博物馆<br>
+                                - Nob Hill：年轻艺术街区，咖啡馆、精品店<br>
+                                <br>
+                                选项 B：Elena Gallegos Open Space 小徒步<br>
+                                - 轻松的自然步道<br>
+                                - 可以看到 Sandia Mountains 全景<br>
+                                <br>
+                                选项 C：Downtown 买手信<br>
+                                - 纪念品店、书店、艺术品
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="time">13:00-17:00</div>
+                        <div class="activity">
+                            <div class="activity-title">🍽️ 午餐 + 回 Airbnb 打包</div>
+                            <div class="activity-detail">
+                                在喜欢的地方吃午餐<br>
+                                收拾行李、打包好所有东西<br>
+                                不要遗漏任何物品！<br>
+                                清理 Airbnb，退房
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="time">17:00-18:15</div>
+                        <div class="activity">
+                            <div class="activity-title">🍽️ 晚餐</div>
+                            <div class="activity-detail">
+                                吃点清淡的（飞行前不要太饱）<br>
+                                在机场附近吃（方便时间安排）<br>
+                                或者在市区吃完再去机场
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="time">18:30</div>
+                        <div class="activity">
+                            <div class="activity-title">⛽ 加油</div>
+                            <div class="activity-detail">
+                                Hertz 要求油箱满格归还<br>
+                                在机场附近加油站加满<br>
+                                保存收据（以防万一）
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="time">19:00</div>
+                        <div class="activity">
+                            <div class="activity-title">🚗 Hertz 还车</div>
+                            <div class="activity-detail">
+                                地点：ABQ 机场<br>
+                                确认号：L4022080249<br>
+                                📸 拍照记录车辆状态<br>
+                                检查账单，确认没有额外费用<br>
+                                妥善保管收据
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="time">19:00-21:20</div>
+                        <div class="activity">
+                            <div class="activity-title">✈️ 安检 + 等候登机</div>
+                            <div class="activity-detail">
+                                进入航站楼<br>
+                                办理行李托运、安检<br>
+                                登机牌已确认<br>
+                                找到登机口、坐下等待<br>
+                                在 gate 买点零食和水
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="time">21:20</div>
+                        <div class="activity">
+                            <div class="activity-title">✈️ 起飞 ABQ → DEN</div>
+                            <div class="activity-detail">
+                                航班：UA5785<br>
+                                预计飞行时间：约 1.5 小时<br>
+                                到达丹佛：22:49
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="time">00:05 (11/30)</div>
+                        <div class="activity">
+                            <div class="activity-title">✈️ 起飞 DEN → PHL</div>
+                            <div class="activity-detail">
+                                航班：UA1021（夜航）<br>
+                                在丹佛转机<br>
+                                预计飞行时间：约 3.5 小时<br>
+                                到达费城：05:27（东部时间）
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tips">
+                    <strong>💡 第五天小贴士：</strong><br>
+                    • 保持轻松心态，不要赶时间<br>
+                    • 油箱一定要加满！（Hertz 很在意这个）<br>
+                    • 还车前检查后备箱、座椅下是否有遗漏物品<br>
+                    • 保存好所有收据和证件<br>
+                    • 夜航比较疲劳，可以在飞机上多休息<br>
+                    • 到达费城已经是早上，直接回家休息吧！
+                </div>
+
+                <div class="accommodation">
+                    <strong>🏠 最后一晚：Airbnb in ABQ Old Town</strong><br>
+                    地址：Old Town 附近<br>
+                    优势：位置好、方便购物、离机场近
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>📅 详细行程 | 新墨西哥 11 月 25-29 日</p>
+            <p style="margin-top: 10px; font-size: 0.9em; opacity: 0.7;">祝你的行程愉快！✨</p>
+        </div>
+    </div>
+</body>
+</html>

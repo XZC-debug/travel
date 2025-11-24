@@ -1,0 +1,1107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>打包清单 - 新墨西哥行程规划</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .nav-button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 25px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            border: 2px solid white;
+        }
+
+        .nav-button:hover {
+            background: white;
+            color: #667eea;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 50px;
+        }
+
+        .section h2 {
+            color: #667eea;
+            font-size: 1.8em;
+            margin-bottom: 25px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .checklist {
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            border: 2px solid #667eea;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        .checklist h3 {
+            color: #667eea;
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .checklist-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+        }
+
+        .checklist-item {
+            background: white;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .checklist-item:hover {
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+            transform: translateX(3px);
+        }
+
+        .checklist-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .checklist-item label {
+            cursor: pointer;
+            flex: 1;
+            font-size: 0.95em;
+            color: #333;
+        }
+
+        .checklist-item input[type="checkbox"]:checked + label {
+            color: #999;
+            text-decoration: line-through;
+        }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .category-box {
+            background: white;
+            border-radius: 12px;
+            border-left: 5px solid #667eea;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .category-box h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.1em;
+        }
+
+        .category-box ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .category-box li {
+            color: #666;
+            margin: 10px 0;
+            padding-left: 25px;
+            position: relative;
+            font-size: 0.95em;
+        }
+
+        .category-box li:before {
+            content: "✓";
+            color: #667eea;
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .priority-box {
+            background: #ffe5e5;
+            border-left: 4px solid #f44336;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .priority-box h4 {
+            color: #c62828;
+            margin-bottom: 10px;
+        }
+
+        .priority-box ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .priority-box li {
+            color: #c62828;
+            margin: 8px 0;
+            padding-left: 25px;
+            position: relative;
+            font-weight: bold;
+        }
+
+        .priority-box li:before {
+            content: "⭐";
+            position: absolute;
+            left: 0;
+        }
+
+        .tips-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196F3;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .tips-box h4 {
+            color: #1565c0;
+            margin-bottom: 10px;
+        }
+
+        .tips-box ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .tips-box li {
+            color: #1565c0;
+            margin: 8px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .tips-box li:before {
+            content: "💡";
+            position: absolute;
+            left: 0;
+        }
+
+        .tab-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .tab-button {
+            padding: 10px 20px;
+            background: #f0f0f0;
+            border: 2px solid transparent;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.95em;
+            transition: all 0.3s ease;
+            color: #666;
+        }
+
+        .tab-button:hover {
+            background: #e0e0e0;
+        }
+
+        .tab-button.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: #667eea;
+        }
+
+        .shopping-section {
+            background: linear-gradient(135deg, #fff8e115 0%, #ffc10715 100%);
+            border: 2px solid #ffc107;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        .shopping-section h3 {
+            color: #ff9800;
+            margin-bottom: 15px;
+        }
+
+        .shopping-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .shopping-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #ff9800;
+        }
+
+        .shopping-item h4 {
+            color: #ff9800;
+            margin-bottom: 8px;
+        }
+
+        .shopping-item .price-range {
+            color: #666;
+            font-size: 0.9em;
+            margin: 5px 0;
+        }
+
+        .shopping-item .recommendation {
+            color: #f57c00;
+            font-size: 0.85em;
+            font-style: italic;
+            margin-top: 8px;
+        }
+
+        .weight-estimate {
+            background: linear-gradient(135deg, #e8f5e915 0%, #4caf5015 100%);
+            border: 2px solid #4CAF50;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .weight-estimate h4 {
+            color: #2e7d32;
+            margin-bottom: 15px;
+        }
+
+        .weight-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+        }
+
+        .weight-item {
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 4px solid #4CAF50;
+        }
+
+        .weight-item .category {
+            color: #2e7d32;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        .weight-item .amount {
+            color: #666;
+            font-size: 0.85em;
+            margin-top: 5px;
+        }
+
+        .print-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 20px 0;
+        }
+
+        .print-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            
+            .container {
+                box-shadow: none;
+            }
+
+            .nav-button, .print-button, .tab-buttons {
+                display: none;
+            }
+        }
+
+        .footer {
+            background: #f5f5f5;
+            padding: 30px;
+            text-align: center;
+            color: #666;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .category-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .checklist-items {
+                grid-template-columns: 1fr;
+            }
+
+            .shopping-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .weight-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tab-buttons {
+                flex-direction: column;
+            }
+
+            .tab-button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎒 打包清单</h1>
+            <p>新墨西哥行程 - 完整的行李清单和购物建议</p>
+            <a href="index.html" class="nav-button">← 返回主页</a>
+            <button class="print-button" onclick="window.print()">🖨️ 打印清单</button>
+        </div>
+
+        <div class="content">
+            <!-- 优先级提示 -->
+            <div class="priority-box">
+                <h4>⭐ 最关键的物品（不能忘！）</h4>
+                <ul>
+                    <li>护照 / 身份证</li>
+                    <li>驾照（正本）</li>
+                    <li>驾照翻译件（建议带）</li>
+                    <li>租车确认信息</li>
+                    <li>航班信息 / 登机牌</li>
+                    <li>酒店确认信息</li>
+                    <li>防晒霜 & 偏光墨镜</li>
+                    <li>羽绒服或厚夹克</li>
+                </ul>
+            </div>
+
+            <!-- 证件和重要文件 -->
+            <div class="section">
+                <h2>📄 证件 & 重要文件</h2>
+
+                <div class="checklist">
+                    <h3>✈️ 出行文件</h3>
+                    <div class="checklist-items">
+                        <div class="checklist-item">
+                            <input type="checkbox" id="c1">
+                            <label for="c1">护照（有效期 6 个月以上）</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="c2">
+                            <label for="c2">身份证</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="c3">
+                            <label for="c3">航班登机牌（电子或打印）</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="c4">
+                            <label for="c4">航班确认信息邮件</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="checklist">
+                    <h3>🚗 租车文件</h3>
+                    <div class="checklist-items">
+                        <div class="checklist-item">
+                            <input type="checkbox" id="c5">
+                            <label for="c5">驾照原件</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="c6">
+                            <label for="c6">驾照中英翻译件</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="c7">
+                            <label for="c7">租车确认信息（确认号：L4022080249）</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="c8">
+                            <label for="c8">信用卡（与驾照同一人）</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="checklist">
+                    <h3>🏨 住宿信息</h3>
+                    <div class="checklist-items">
+                        <div class="checklist-item">
+                            <input type="checkbox" id="c9">
+                            <label for="c9">Alamogordo 酒店确认</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="c10">
+                            <label for="c10">Roswell 酒店确认</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="c11">
+                            <label for="c11">ABQ Airbnb 确认信息</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="c12">
+                            <label for="c12">景点门票或预订（Carlsbad, Sandia Peak, Meow Wolf）</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tips-box">
+                    <h4>💡 证件小贴士</h4>
+                    <ul>
+                        <li>护照复印件放在不同地方（防万一）</li>
+                        <li>驾照翻译件强烈建议带上（美国有时需要）</li>
+                        <li>将所有重要信息存在手机备忘录中</li>
+                        <li>截图或拍照保存确认信息</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 衣物清单 -->
+            <div class="section">
+                <h2>👕 衣物 & 鞋类</h2>
+
+                <div class="category-grid">
+                    <div class="category-box">
+                        <h3>👔 上身衣物</h3>
+                        <ul>
+                            <li>速干短袖 ×3-4</li>
+                            <li>长袖衬衫 ×1-2</li>
+                            <li>卫衣（白色）×1</li>
+                            <li>卫衣（棕色）×1</li>
+                            <li>羊绒衫 ×1</li>
+                            <li>背心 ×2</li>
+                            <li>⭐ 羽绒服 ×1</li>
+                        </ul>
+                    </div>
+
+                    <div class="category-box">
+                        <h3>👖 下身衣物</h3>
+                        <ul>
+                            <li>黑色长裤 ×1</li>
+                            <li>牛仔裤 ×1</li>
+                            <li>内裤 ×2-3</li>
+                            <li>袜子 ×4</li>
+                            <li>登山袜（可选）</li>
+                        </ul>
+                    </div>
+
+                    <div class="category-box">
+                        <h3>👟 鞋类 & 配饰</h3>
+                        <ul>
+                            <li>⭐ 舒适运动鞋</li>
+                            <li>⭐ 登山鞋（推荐）</li>
+                            <li>⭐ 偏光墨镜</li>
+                            <li>帽子/棒球帽</li>
+                            <li>围巾（可选）</li>
+                            <li>手套（可选）</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="checklist">
+                    <h3>✅ 衣物检查表</h3>
+                    <div class="checklist-items">
+                        <div class="checklist-item">
+                            <input type="checkbox" id="w1">
+                            <label for="w1">羽绒服（必需！）</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="w2">
+                            <label for="w2">偏光墨镜（必需！）</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="w3">
+                            <label for="w3">运动鞋和登山鞋</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="w4">
+                            <label for="w4">帽子</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="w5">
+                            <label for="w5">围巾/手套</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="w6">
+                            <label for="w6">分层衣物</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 护理和卫生 -->
+            <div class="section">
+                <h2>🧴 护肤 & 卫生用品</h2>
+
+                <div class="category-grid">
+                    <div class="category-box">
+                        <h3>☀️ 防晒品</h3>
+                        <ul>
+                            <li>⭐ 防晒霜 (SPF 50+)</li>
+                            <li>防晒棒</li>
+                            <li>防晒唇膏</li>
+                            <li>防晒散粉（可选）</li>
+                        </ul>
+                    </div>
+
+                    <div class="category-box">
+                        <h3>💧 护肤品</h3>
+                        <ul>
+                            <li>洗面奶</li>
+                            <li>爽肤水</li>
+                            <li>保湿霜</li>
+                            <li>眼霜</li>
+                            <li>润唇膏</li>
+                            <li>护手霜</li>
+                        </ul>
+                    </div>
+
+                    <div class="category-box">
+                        <h3>🧼 日常卫生</h3>
+                        <ul>
+                            <li>牙刷 & 牙膏</li>
+                            <li>漱口水</li>
+                            <li>洗发水 & 护发素</li>
+                            <li>沐浴露</li>
+                            <li>小毛巾</li>
+                            <li>卫生纸/湿巾</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="checklist">
+                    <h3>✅ 护理品检查表</h3>
+                    <div class="checklist-items">
+                        <div class="checklist-item">
+                            <input type="checkbox" id="h1">
+                            <label for="h1">防晒霜（必需！）</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="h2">
+                            <label for="h2">润唇膏（干燥地区必需）</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="h3">
+                            <label for="h3">保湿霜（干燥环境）</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="h4">
+                            <label for="h4">牙刷牙膏</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="h5">
+                            <label for="h5">洗发水/沐浴露</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="h6">
+                            <label for="h6">女性卫生用品</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 电子产品 -->
+            <div class="section">
+                <h2>🔌 电子产品 & 充电</h2>
+
+                <div class="category-grid">
+                    <div class="category-box">
+                        <h3>📱 主要设备</h3>
+                        <ul>
+                            <li>手机</li>
+                            <li>相机（可选）</li>
+                            <li>手表</li>
+                            <li>耳机/AirPods</li>
+                        </ul>
+                    </div>
+
+                    <div class="category-box">
+                        <h3>🔋 充电用品</h3>
+                        <ul>
+                            <li>⭐ 充电宝（大容量推荐）</li>
+                            <li>手机充电线 ×2</li>
+                            <li>手表充电线</li>
+                            <li>相机充电线（如有）</li>
+                            <li>USB 转换器（备用）</li>
+                        </ul>
+                    </div>
+
+                    <div class="category-box">
+                        <h3>📍 导航 & 工具</h3>
+                        <ul>
+                            <li>离线地图（Google Maps）</li>
+                            <li>GPS 或导航仪（可选）</li>
+                            <li>移动热点或国际漫游</li>
+                            <li>手电筒（洞穴用）</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="checklist">
+                    <h3>✅ 电子产品检查表</h3>
+                    <div class="checklist-items">
+                        <div class="checklist-item">
+                            <input type="checkbox" id="e1">
+                            <label for="e1">手机 & 充电线</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="e2">
+                            <label for="e2">充电宝 & 线</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="e3">
+                            <label for="e3">相机（如带）</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="e4">
+                            <label for="e4">下载离线地图</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="e5">
+                            <label for="e5">手电筒或头灯</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 医疗和健康 -->
+            <div class="section">
+                <h2>💊 医疗 & 健康用品</h2>
+
+                <div class="category-grid">
+                    <div class="category-box">
+                        <h3>🏥 常用药物</h3>
+                        <ul>
+                            <li>创可贴 & 棉棒</li>
+                            <li>消炎药</li>
+                            <li>感冒药</li>
+                            <li>肠胃药</li>
+                            <li>止痛药</li>
+                            <li>过敏药</li>
+                        </ul>
+                    </div>
+
+                    <div class="category-box">
+                        <h3>💧 保健用品</h3>
+                        <ul>
+                            <li>⭐ 水杯（保温瓶推荐）</li>
+                            <li>维生素 / 补充剂（可选）</li>
+                            <li>电解质饮料（可选）</li>
+                            <li>高原反应药（可选）</li>
+                        </ul>
+                    </div>
+
+                    <div class="category-box">
+                        <h3>🩹 户外急救</h3>
+                        <ul>
+                            <li>止血贴 & 绷带</li>
+                            <li>清洁棉片</li>
+                            <li>消毒液/酒精棉</li>
+                            <li>防晒棒 / 唇膏</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="checklist">
+                    <h3>✅ 医疗用品检查表</h3>
+                    <div class="checklist-items">
+                        <div class="checklist-item">
+                            <input type="checkbox" id="m1">
+                            <label for="m1">创可贴 & 棉棒</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="m2">
+                            <label for="m2">常用药物</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="m3">
+                            <label for="m3">保温水杯</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="m4">
+                            <label for="m4">防晒霜</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="m5">
+                            <label for="m5">个人处方药（如需要）</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 其他用品 -->
+            <div class="section">
+                <h2>🎒 其他杂物</h2>
+
+                <div class="category-grid">
+                    <div class="category-box">
+                        <h3>🎒 背包 & 收纳</h3>
+                        <ul>
+                            <li>旅行背包</li>
+                            <li>日用背包</li>
+                            <li>收纳袋 ×2-3</li>
+                            <li>旅行收纳盒</li>
+                        </ul>
+                    </div>
+
+                    <div class="category-box">
+                        <h3>📚 出行文件</h3>
+                        <ul>
+                            <li>护照夹</li>
+                            <li>钱包</li>
+                            <li>证件包</li>
+                            <li>打印的行程表</li>
+                        </ul>
+                    </div>
+
+                    <div class="category-box">
+                        <h3>🎁 其他物品</h3>
+                        <ul>
+                            <li>零食（长途驾驶）</li>
+                            <li>纸和笔</li>
+                            <li>耳塞（飞行）</li>
+                            <li>眼罩（飞行）</li>
+                            <li>颈枕（可选）</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="checklist">
+                    <h3>✅ 杂物检查表</h3>
+                    <div class="checklist-items">
+                        <div class="checklist-item">
+                            <input type="checkbox" id="o1">
+                            <label for="o1">背包或行李箱</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="o2">
+                            <label for="o2">钱包 & 现金 / 信用卡</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="o3">
+                            <label for="o3">打印行程 & 地图</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="o4">
+                            <label for="o4">零食 & 饮料</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="o5">
+                            <label for="o5">飞行舒适用品</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 购物建议 -->
+            <div class="section">
+                <h2>🛒 防晒和护肤购物建议</h2>
+
+                <div class="shopping-section">
+                    <h3>☀️ 防晒产品推荐</h3>
+                    <div class="shopping-grid">
+                        <div class="shopping-item">
+                            <h4>防晒霜</h4>
+                            <div class="price-range">$15-30</div>
+                            <div class="recommendation">
+                                推荐：La Roche-Posay / Neutrogena / Coppertone<br>
+                                SPF 50+ / PA++++<br>
+                                防水性好，不易脱妆
+                            </div>
+                        </div>
+                        <div class="shopping-item">
+                            <h4>防晒棒</h4>
+                            <div class="price-range">$8-15</div>
+                            <div class="recommendation">
+                                推荐：Coppertone Stick<br>
+                                便携，随时补涂<br>
+                                适合脸和耳朵
+                            </div>
+                        </div>
+                        <div class="shopping-item">
+                            <h4>防晒唇膏</h4>
+                            <div class="price-range">$3-8</div>
+                            <div class="recommendation">
+                                推荐：任何 SPF 30+ 的唇膏<br>
+                                干燥地区必需<br>
+                                多备一个在包里
+                            </div>
+                        </div>
+                        <div class="shopping-item">
+                            <h4>偏光墨镜</h4>
+                            <div class="price-range">$20-100+</div>
+                            <div class="recommendation">
+                                推荐品牌：Ray-Ban / Oakley<br>
+                                UV 防护最重要<br>
+                                白沙必备
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="shopping-section">
+                    <h3>💧 护肤品推荐</h3>
+                    <div class="shopping-grid">
+                        <div class="shopping-item">
+                            <h4>保湿霜</h4>
+                            <div class="price-range">$15-30</div>
+                            <div class="recommendation">
+                                推荐：Cerave / Eucerin<br>
+                                干燥环境必需<br>
+                                无香料更好
+                            </div>
+                        </div>
+                        <div class="shopping-item">
+                            <h4>润唇膏</h4>
+                            <div class="price-range">$3-8</div>
+                            <div class="recommendation">
+                                推荐：Burt's Bees / Chapstick<br>
+                                多备几个<br>
+                                防晒功能最好
+                            </div>
+                        </div>
+                        <div class="shopping-item">
+                            <h4>护手霜</h4>
+                            <div class="price-range">$3-10</div>
+                            <div class="recommendation">
+                                推荐：任何保湿护手霜<br>
+                                开车容易干裂<br>
+                                车里放一个
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tips-box">
+                    <h4>💡 购物建议</h4>
+                    <ul>
+                        <li>防晒霜买大瓶的，200ml 以上</li>
+                        <li>可以在美国当地 CVS/Walgreens 买（便宜）</li>
+                        <li>也可以国内买好带过去</li>
+                        <li>护肤品买小样或旅行装（便于打包）</li>
+                        <li>白沙反光强，防晒要加倍</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 出发前最后检查 -->
+            <div class="section">
+                <h2>🔍 出发前 24 小时检查清单</h2>
+
+                <div class="checklist">
+                    <h3>✈️ 飞行前</h3>
+                    <div class="checklist-items">
+                        <div class="checklist-item">
+                            <input type="checkbox" id="f1">
+                            <label for="f1">护照和身份证</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="f2">
+                            <label for="f2">登机牌（电子或打印）</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="f3">
+                            <label for="f3">行李已打包</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="f4">
+                            <label for="f4">家中门窗已关</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="f5">
+                            <label for="f5">手机充满电</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="checklist">
+                    <h3>🚗 租车前</h3>
+                    <div class="checklist-items">
+                        <div class="checklist-item">
+                            <input type="checkbox" id="d1">
+                            <label for="d1">驾照 & 翻译件</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="d2">
+                            <label for="d2">租车确认邮件（L4022080249）</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="d3">
+                            <label for="d3">信用卡已准备</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="d4">
+                            <label for="d4">导航 APP 已下载离线地图</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="d5">
+                            <label for="d5">准备好相机</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="checklist">
+                    <h3>🎫 景点预订</h3>
+                    <div class="checklist-items">
+                        <div class="checklist-item">
+                            <input type="checkbox" id="t1">
+                            <label for="t1">Carlsbad Caverns 票已预订</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="t2">
+                            <label for="t2">Sandia Peak Tram 预约</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="t3">
+                            <label for="t3">Meow Wolf 预约</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="t4">
+                            <label for="t4">酒店预订确认</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 重量估算 -->
+            <div class="weight-estimate">
+                <h4>⚖️ 行李重量估算</h4>
+                <div class="weight-grid">
+                    <div class="weight-item">
+                        <div class="category">衣物 & 鞋</div>
+                        <div class="amount">约 4-5 kg</div>
+                    </div>
+                    <div class="weight-item">
+                        <div class="category">护理 & 卫生</div>
+                        <div class="amount">约 1-1.5 kg</div>
+                    </div>
+                    <div class="weight-item">
+                        <div class="category">电子产品</div>
+                        <div class="amount">约 1-2 kg</div>
+                    </div>
+                    <div class="weight-item">
+                        <div class="category">杂物</div>
+                        <div class="amount">约 1-2 kg</div>
+                    </div>
+                    <div class="weight-item">
+                        <div class="category">行李箱</div>
+                        <div class="amount">约 2-3 kg</div>
+                    </div>
+                    <div class="weight-item">
+                        <div class="category">总计</div>
+                        <div class="amount">约 9-13.5 kg</div>
+                    </div>
+                </div>
+                <div class="tips-box" style="margin-top: 15px;">
+                    <h4>💡 行李小贴士</h4>
+                    <ul>
+                        <li>大多数航空公司允许 23 kg 行李 + 手携行李</li>
+                        <li>推荐使用中等或小行李箱（便于打包）</li>
+                        <li>不要超重（超重费贵）</li>
+                        <li>重物放箱底，衣物放上面</li>
+                        <li>易碎物品放中间用衣物包住</li>
+                    </ul>
+                </div>
+            </div>
+
+            <button class="print-button" onclick="window.print()" style="width: 100%; margin-top: 30px;">🖨️ 打印此清单</button>
+        </div>
+
+        <div class="footer">
+            <p>🎒 打包清单 | 新墨西哥 11 月 25-29 日</p>
+            <p style="margin-top: 10px; font-size: 0.9em; opacity: 0.7;">打包好你的行李，准备好你的冒险！✨</p>
+        </div>
+    </div>
+
+    <script>
+        // 保存检查状态到 localStorage
+        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+            const id = checkbox.id;
+            checkbox.checked = localStorage.getItem(id) === 'true';
+            
+            checkbox.addEventListener('change', () => {
+                localStorage.setItem(id, checkbox.checked);
+            });
+        });
+    </script>
+</body>
+</html>

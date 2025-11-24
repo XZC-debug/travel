@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>天气指南 - 新墨西哥行程规划</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .nav-button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 25px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            border: 2px solid white;
+        }
+
+        .nav-button:hover {
+            background: white;
+            color: #667eea;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 50px;
+        }
+
+        .section h2 {
+            color: #667eea;
+            font-size: 1.8em;
+            margin-bottom: 25px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .weather-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .weather-card {
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            border: 2px solid #667eea;
+            border-radius: 12px;
+            padding: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .weather-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+        }
+
+        .day-label {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            display: inline-block;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .weather-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 15px 0;
+        }
+
+        .temp-box {
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .temp-label {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+
+        .temp-value {
+            color: #333;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        .location-title {
+            color: #333;
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .weather-status {
+            color: #666;
+            font-size: 0.95em;
+            margin: 10px 0;
+        }
+
+        .special-note {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 12px;
+            border-radius: 6px;
+            color: #856404;
+            font-size: 0.9em;
+            margin-top: 10px;
+        }
+
+        .clothing-section {
+            background: linear-gradient(135deg, #e8f5e915 0%, #4caf5015 100%);
+            border: 2px solid #4CAF50;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        .clothing-section h3 {
+            color: #2e7d32;
+            font-size: 1.3em;
+            margin-bottom: 15px;
+        }
+
+        .clothing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .clothing-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #4CAF50;
+        }
+
+        .clothing-item h4 {
+            color: #2e7d32;
+            margin-bottom: 8px;
+        }
+
+        .clothing-item ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .clothing-item li {
+            color: #666;
+            font-size: 0.9em;
+            margin: 5px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .clothing-item li:before {
+            content: "✓";
+            color: #4CAF50;
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .tips-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196F3;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .tips-box h4 {
+            color: #1565c0;
+            margin-bottom: 10px;
+        }
+
+        .tips-box ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .tips-box li {
+            color: #1565c0;
+            margin: 8px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .tips-box li:before {
+            content: "💡";
+            position: absolute;
+            left: 0;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .comparison-table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        .comparison-table td {
+            padding: 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .comparison-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .comparison-table tr:hover {
+            background: #f5f5f5;
+        }
+
+        .emoji-large {
+            font-size: 2.5em;
+            display: block;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .essentials {
+            background: #ffe5e5;
+            border-left: 4px solid #f44336;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .essentials h4 {
+            color: #c62828;
+            margin-bottom: 10px;
+        }
+
+        .essentials ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .essentials li {
+            color: #c62828;
+            margin: 8px 0;
+            padding-left: 25px;
+            position: relative;
+            font-weight: bold;
+        }
+
+        .essentials li:before {
+            content: "⭐";
+            position: absolute;
+            left: 0;
+        }
+
+        .comparison-note {
+            background: #f3e5f5;
+            border-left: 4px solid #9c27b0;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            color: #6a1b9a;
+        }
+
+        .footer {
+            background: #f5f5f5;
+            padding: 30px;
+            text-align: center;
+            color: #666;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .weather-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .weather-info {
+                grid-template-columns: 1fr;
+            }
+
+            .clothing-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .comparison-table {
+                font-size: 0.9em;
+            }
+
+            .comparison-table th,
+            .comparison-table td {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌡️ 天气指南</h1>
+            <p>2025年11月25日 - 11月29日 天气预报和穿衣建议</p>
+            <a href="index.html" class="nav-button">← 返回主页</a>
+        </div>
+
+        <div class="content">
+            <!-- 每日天气 -->
+            <div class="section">
+                <h2>📅 逐日天气预报</h2>
+
+                <div class="weather-grid">
+                    <!-- Day 1 -->
+                    <div class="weather-card">
+                        <div class="day-label">Day 1 - 11/25 (Tue)</div>
+                        <div class="location-title">🏜️ White Sands & Alamogordo</div>
+                        <div class="weather-info">
+                            <div class="temp-box">
+                                <div class="temp-label">高温</div>
+                                <div class="temp-value">66°F</div>
+                                <div class="temp-label">(19°C)</div>
+                            </div>
+                            <div class="temp-box">
+                                <div class="temp-label">低温</div>
+                                <div class="temp-value">35°F</div>
+                                <div class="temp-label">(2°C)</div>
+                            </div>
+                        </div>
+                        <div class="weather-status">
+                            <strong>☀️ 晴朗</strong><br>
+                            风轻，光线强
+                        </div>
+                        <div class="special-note">
+                            💡 白天非常温暖，但日落后温度快速下降。白沙反光强，一定要涂防晒！
+                        </div>
+                    </div>
+
+                    <!-- Day 2 -->
+                    <div class="weather-card">
+                        <div class="day-label">Day 2 - 11/26 (Wed)</div>
+                        <div class="location-title">🕳️ Carlsbad & Roswell</div>
+                        <div class="weather-info">
+                            <div class="temp-box">
+                                <div class="temp-label">高温</div>
+                                <div class="temp-value">66°F</div>
+                                <div class="temp-label">(19°C)</div>
+                            </div>
+                            <div class="temp-box">
+                                <div class="temp-label">低温</div>
+                                <div class="temp-value">54°F</div>
+                                <div class="temp-label">(12°C)</div>
+                            </div>
+                        </div>
+                        <div class="weather-status">
+                            <strong>☀️ 晴到多云</strong><br>
+                            Cloudcroft 山路可能冷
+                        </div>
+                        <div class="special-note">
+                            💡 洞穴内温度约 56°F，比较冷。带一件外套进洞。山路注意慢行。
+                        </div>
+                    </div>
+
+                    <!-- Day 3 -->
+                    <div class="weather-card">
+                        <div class="day-label">Day 3 - 11/27 (Thu)</div>
+                        <div class="location-title">🏙️ ABQ & Sandia Peak</div>
+                        <div class="weather-info">
+                            <div class="temp-box">
+                                <div class="temp-label">高温</div>
+                                <div class="temp-value">54°F</div>
+                                <div class="temp-label">(12°C)</div>
+                            </div>
+                            <div class="temp-box">
+                                <div class="temp-label">低温</div>
+                                <div class="temp-value">32°F</div>
+                                <div class="temp-label">(0°C)</div>
+                            </div>
+                        </div>
+                        <div class="weather-status">
+                            <strong>☀️ 晴朗（感恩节）</strong><br>
+                            山顶冷，风大
+                        </div>
+                        <div class="special-note">
+                            ⚠️ 山顶比市区低 10-12°C，一定要穿羽绒服！风大，防风很重要。
+                        </div>
+                    </div>
+
+                    <!-- Day 4 -->
+                    <div class="weather-card">
+                        <div class="day-label">Day 4 - 11/28 (Fri)</div>
+                        <div class="location-title">🎨 Santa Fe</div>
+                        <div class="weather-info">
+                            <div class="temp-box">
+                                <div class="temp-label">高温</div>
+                                <div class="temp-value">52°F</div>
+                                <div class="temp-label">(11°C)</div>
+                            </div>
+                            <div class="temp-box">
+                                <div class="temp-label">低温</div>
+                                <div class="temp-value">30°F</div>
+                                <div class="temp-label">(-1°C)</div>
+                            </div>
+                        </div>
+                        <div class="weather-status">
+                            <strong>☀️ 晴朗</strong><br>
+                            海拔高，温度更低
+                        </div>
+                        <div class="special-note">
+                            💡 Santa Fe 海拔 7000 英尺，温度明显低于 ABQ。可能有轻微高反，多喝水。
+                        </div>
+                    </div>
+
+                    <!-- Day 5 -->
+                    <div class="weather-card">
+                        <div class="day-label">Day 5 - 11/29 (Sat)</div>
+                        <div class="location-title">🏙️ ABQ → 返回</div>
+                        <div class="weather-info">
+                            <div class="temp-box">
+                                <div class="temp-label">高温</div>
+                                <div class="temp-value">54°F</div>
+                                <div class="temp-label">(12°C)</div>
+                            </div>
+                            <div class="temp-box">
+                                <div class="temp-label">低温</div>
+                                <div class="temp-value">32°F</div>
+                                <div class="temp-label">(0°C)</div>
+                            </div>
+                        </div>
+                        <div class="weather-status">
+                            <strong>☀️ 晴朗</strong><br>
+                            最后一天，轻松逛逛
+                        </div>
+                        <div class="special-note">
+                            💡 市区活动，天气好。晚上夜航，不需要准备太多。
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 与费城对比 -->
+            <div class="section">
+                <h2>📊 新墨西哥 vs 费城天气对比</h2>
+
+                <table class="comparison-table">
+                    <tr>
+                        <th>🌍 地点</th>
+                        <th>☀️ 高温</th>
+                        <th>❄️ 低温</th>
+                        <th>🌥️ 状况</th>
+                        <th>💧 特点</th>
+                    </tr>
+                    <tr>
+                        <td><strong>费城 (今天)</strong></td>
+                        <td>53°F (12°C)</td>
+                        <td>37°F (3°C)</td>
+                        <td>晴到多云</td>
+                        <td>潮湿阴冷</td>
+                    </tr>
+                    <tr>
+                        <td><strong>White Sands</strong></td>
+                        <td>66°F (19°C)</td>
+                        <td>35°F (2°C)</td>
+                        <td>晴朗</td>
+                        <td>白天温暖，晚间很冷</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Carlsbad</strong></td>
+                        <td>66°F (19°C)</td>
+                        <td>54°F (12°C)</td>
+                        <td>晴朗</td>
+                        <td>洞内 56°F，比较冷</td>
+                    </tr>
+                    <tr>
+                        <td><strong>ABQ</strong></td>
+                        <td>54°F (12°C)</td>
+                        <td>32°F (0°C)</td>
+                        <td>晴朗</td>
+                        <td>干燥，晚间接近冰点</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Santa Fe</strong></td>
+                        <td>52°F (11°C)</td>
+                        <td>30°F (-1°C)</td>
+                        <td>晴朗</td>
+                        <td>最冷的地点，海拔高</td>
+                    </tr>
+                </table>
+
+                <div class="comparison-note">
+                    <strong>📌 关键区别：</strong><br>
+                    • 新墨西哥白天比费城温暖 5-13°F<br>
+                    • 但晚间更冷（接近或低于冰点）<br>
+                    • 整个行程干燥晴朗（无雨）<br>
+                    • 温差大（20-30°F），必须分层穿衣
+                </div>
+            </div>
+
+            <!-- 穿衣建议 -->
+            <div class="section">
+                <h2>👕 穿衣建议</h2>
+
+                <div class="essentials">
+                    <h4>⭐ 必须携带的防护用品</h4>
+                    <ul>
+                        <li>防晒霜（SPF 30+ 以上）</li>
+                        <li>偏光墨镜（白沙反光强烈）</li>
+                        <li>羽绒服或厚夹克（晚间和山顶）</li>
+                        <li>长袖衬衫或打底衣（分层穿）</li>
+                        <li>舒适运动鞋（白沙、洞穴、徒步）</li>
+                    </ul>
+                </div>
+
+                <div class="clothing-section">
+                    <h3>第 1-2 天：White Sands & Carlsbad</h3>
+                    <div class="clothing-grid">
+                        <div class="clothing-item">
+                            <h4>☀️ 白天（12:00-17:00）</h4>
+                            <ul>
+                                <li>短袖或轻薄长袖</li>
+                                <li>轻薄夹克（可脱掉）</li>
+                                <li>短裤或长裤（推荐长裤）</li>
+                                <li>帽子（遮阳）</li>
+                                <li>墨镜 + 防晒霜</li>
+                            </ul>
+                        </div>
+                        <div class="clothing-item">
+                            <h4>🌅 日落时（17:00-19:00）</h4>
+                            <ul>
+                                <li>长袖衬衫</li>
+                                <li>毛衣或厚夹克</li>
+                                <li>长裤</li>
+                                <li>帽子</li>
+                                <li>可选：围巾</li>
+                            </ul>
+                        </div>
+                        <div class="clothing-item">
+                            <h4>❄️ 夜间（19:00+）</h4>
+                            <ul>
+                                <li>羽绒服或厚毛衣</li>
+                                <li>长袖衬衫</li>
+                                <li>长裤</li>
+                                <li>如果有：手套</li>
+                                <li>室内：轻松服装</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="tips-box" style="margin-top: 20px;">
+                        <h4>💡 第 1-2 天穿衣要点</h4>
+                        <ul>
+                            <li>分层穿衣最重要，可随时加脱</li>
+                            <li>白沙反光强，一定要涂防晒</li>
+                            <li>洞穴内冷，带一件外套</li>
+                            <li>长袖可防晒和防冷</li>
+                            <li>不要穿牛仔裤进洞（容易脏）</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="clothing-section">
+                    <h3>第 3-5 天：ABQ & Santa Fe</h3>
+                    <div class="clothing-grid">
+                        <div class="clothing-item">
+                            <h4>☀️ 白天（9:00-17:00）</h4>
+                            <ul>
+                                <li>长袖衬衫或卫衣</li>
+                                <li>轻薄毛衣</li>
+                                <li>长裤</li>
+                                <li>舒适运动鞋</li>
+                                <li>帽子（可选）</li>
+                            </ul>
+                        </div>
+                        <div class="clothing-item">
+                            <h4>🌅 日落 & Sandia Peak</h4>
+                            <ul>
+                                <li>长袖衬衫</li>
+                                <li>羽绒服（必须！）</li>
+                                <li>长裤</li>
+                                <li>帽子</li>
+                                <li>可选：手套、围巾</li>
+                            </ul>
+                        </div>
+                        <div class="clothing-item">
+                            <h4>❄️ 夜间（18:00+）</h4>
+                            <ul>
+                                <li>羽绒服（必须！）</li>
+                                <li>长袖衬衫</li>
+                                <li>长裤</li>
+                                <li>帽子</li>
+                                <li>如果有：手套</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="tips-box" style="margin-top: 20px;">
+                        <h4>💡 第 3-5 天穿衣要点</h4>
+                        <ul>
+                            <li>山顶（Sandia Peak）比市区冷 10-12°C，一定要穿羽绒服</li>
+                            <li>Santa Fe 海拔高，温度更低</li>
+                            <li>夜间接近冰点，羽绒服必需</li>
+                            <li>干燥环境，不需要雨具</li>
+                            <li>Old Town 散步比较轻松，穿舒适就好</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 完整打包清单 -->
+            <div class="section">
+                <h2>🎒 完整衣物清单</h2>
+
+                <div class="clothing-section">
+                    <h3>上身衣物</h3>
+                    <div class="clothing-grid">
+                        <div class="clothing-item">
+                            <h4>速干衣/T恤</h4>
+                            <ul>
+                                <li>短袖速干衣 ×3-4</li>
+                                <li>白色/浅色为主</li>
+                                <li>便于洗晒</li>
+                            </ul>
+                        </div>
+                        <div class="clothing-item">
+                            <h4>长袖/卫衣</h4>
+                            <ul>
+                                <li>长袖衬衫 ×1-2</li>
+                                <li>白色卫衣 ×1</li>
+                                <li>棕色卫衣 ×1</li>
+                            </ul>
+                        </div>
+                        <div class="clothing-item">
+                            <h4>保暖层</h4>
+                            <ul>
+                                <li>羊绒衫 ×1</li>
+                                <li>毛衣 ×1</li>
+                                <li>背心 ×2</li>
+                            </ul>
+                        </div>
+                        <div class="clothing-item">
+                            <h4>外套</h4>
+                            <ul>
+                                <li>⭐ 羽绒服（必需）</li>
+                                <li>厚夹克（替代方案）</li>
+                                <li>轻薄防风层</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="clothing-section">
+                    <h3>下身衣物</h3>
+                    <div class="clothing-grid">
+                        <div class="clothing-item">
+                            <h4>长裤</h4>
+                            <ul>
+                                <li>黑色长裤 ×1</li>
+                                <li>牛仔裤 ×1</li>
+                                <li>运动裤 ×1（可选）</li>
+                            </ul>
+                        </div>
+                        <div class="clothing-item">
+                            <h4>内衣 & 袜子</h4>
+                            <ul>
+                                <li>内裤 ×2-3</li>
+                                <li>袜子 ×4</li>
+                                <li>户外登山袜（可选）</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="clothing-section">
+                    <h3>脚上 & 配饰</h3>
+                    <div class="clothing-grid">
+                        <div class="clothing-item">
+                            <h4>鞋类</h4>
+                            <ul>
+                                <li>⭐ 舒适运动鞋</li>
+                                <li>登山鞋（推荐）</li>
+                                <li>休闲鞋（备用）</li>
+                            </ul>
+                        </div>
+                        <div class="clothing-item">
+                            <h4>配饰</h4>
+                            <ul>
+                                <li>⭐ 偏光墨镜</li>
+                                <li>帽子/棒球帽</li>
+                                <li>围巾（可选）</li>
+                                <li>手套（可选）</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 护肤防晒 -->
+            <div class="section">
+                <h2>☀️ 防晒 & 护肤</h2>
+
+                <div class="essentials" style="background: #fff3cd; border-left-color: #ffc107;">
+                    <h4 style="color: #856404;">⭐ 防晒必备品</h4>
+                    <ul style="color: #856404;">
+                        <li>防晒霜（SPF 50+，PA++++）</li>
+                        <li>偏光墨镜（UV 防护）</li>
+                        <li>防晒唇膏</li>
+                        <li>防晒衣/长袖（物理防护）</li>
+                    </ul>
+                </div>
+
+                <div class="clothing-section">
+                    <h3>护肤产品清单</h3>
+                    <div class="clothing-grid">
+                        <div class="clothing-item">
+                            <h4>防晒</h4>
+                            <ul>
+                                <li>防晒霜 200ml+</li>
+                                <li>防晒棒</li>
+                                <li>防晒唇膏</li>
+                                <li>防晒散粉（可选）</li>
+                            </ul>
+                        </div>
+                        <div class="clothing-item">
+                            <h4>保湿</h4>
+                            <ul>
+                                <li>面部保湿霜</li>
+                                <li>润唇膏</li>
+                                <li>身体乳（可选）</li>
+                                <li>护手霜</li>
+                            </ul>
+                        </div>
+                        <div class="clothing-item">
+                            <h4>日常护肤</h4>
+                            <ul>
+                                <li>洗面奶</li>
+                                <li>爽肤水</li>
+                                <li>眼霜</li>
+                                <li>面膜（飞行后）</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tips-box">
+                    <h4>💡 防晒护肤小贴士</h4>
+                    <ul>
+                        <li>新墨西哥海拔高，紫外线强，防晒非常重要</li>
+                        <li>白沙反光强，要加强防晒力度</li>
+                        <li>干燥地区，保湿很重要（防裂防脱皮）</li>
+                        <li>每 2-3 小时补一次防晒霜</li>
+                        <li>晚间做好补水护理</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 其他天气提示 -->
+            <div class="section">
+                <h2>⚡ 天气相关提示</h2>
+
+                <div class="tips-box">
+                    <h4>💨 风力</h4>
+                    <ul>
+                        <li>整个行程风轻到中等</li>
+                        <li>Sandia Peak 山顶风大，要防风</li>
+                        <li>不需要特殊防风措施，但长围巾会很舒服</li>
+                    </ul>
+                </div>
+
+                <div class="tips-box">
+                    <h4>💧 降水</h4>
+                    <ul>
+                        <li>整个行程基本无雨（极少降水</li>
+                        <li>不需要带雨伞或雨衣</li>
+                        <li>但携带薄雨衣也无妨（备用）</li>
+                    </ul>
+                </div>
+
+                <div class="tips-box">
+                    <h4>❄️ 结冰风险</h4>
+                    <ul>
+                        <li>Cloudcroft 山路可能有轻度结冰（11/26）</li>
+                        <li>注意慢行，不用过于担心</li>
+                        <li>Hertz 租车配备全季节轮胎</li>
+                        <li>其他路段基本安全</li>
+                    </ul>
+                </div>
+
+                <div class="tips-box">
+                    <h4>🏔️ 高海拔症状</h4>
+                    <ul>
+                        <li>Santa Fe 海拔 7000 英尺，ABQ 5000 英尺</li>
+                        <li>可能有轻微头晕、疲劳（正常反应）</li>
+                        <li>多喝水、慢走、避免剧烈运动</li>
+                        <li>一般 1-2 天能适应</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>🌡️ 天气指南 | 新墨西哥 11 月 25-29 日</p>
+            <p style="margin-top: 10px; font-size: 0.9em; opacity: 0.7;">祝你的行程愉快！记得做好防晒和保暖！✨</p>
+        </div>
+    </div>
+</body>
+</html>
