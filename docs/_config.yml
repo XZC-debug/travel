@@ -8,11 +8,10 @@ url: https://xzc-debug.github.io/travel
 
 # GitHub Pages 设置
 source: docs
-destination: _site
 encoding: utf-8
 
-# 主题设置（可选，保持简洁）
-theme: jekyll-default
+# 注意：不设置 theme，因为使用纯 HTML 站点
+# 如果要使用主题，可选择：minima, jekyll-theme-slate, jekyll-theme-cayman 等
 
 # 不处理以下文件
 exclude:
@@ -20,13 +19,8 @@ exclude:
   - Gemfile.lock
   - README.md
   - .gitignore
+  - node_modules
+  - vendor
 
-# Markdown 处理器
-markdown: kramdown
-kramdown:
-  input: GFM
-  syntax_highlighter: rouge
-
-# 插件
-plugins:
-  - jekyll-seo-tag
+# 这是一个纯 HTML 站点，所有样式都在 HTML 文件中定义
+# GitHub Pages 会直接发布这些 HTML 文件，无需进行 Jekyll 处理
