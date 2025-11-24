@@ -1,0 +1,32 @@
+# GitHub Pages 配置文件
+# 这个文件告诉 GitHub Pages 如何处理你的站点
+
+# 站点基本信息
+title: 新墨西哥行程规划
+description: 2025年11月25-29日 新墨西哥自驾游完整行程和地图
+url: https://xzc-debug.github.io/travel
+
+# GitHub Pages 设置
+source: docs
+destination: _site
+encoding: utf-8
+
+# 主题设置（可选，保持简洁）
+theme: jekyll-default
+
+# 不处理以下文件
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - README.md
+  - .gitignore
+
+# Markdown 处理器
+markdown: kramdown
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+
+# 插件
+plugins:
+  - jekyll-seo-tag

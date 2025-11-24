@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新墨西哥行程地图 | 11/25-11/29</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: flex;
+            height: 800px;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        #map {
+            flex: 1;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .sidebar {
+            width: 320px;
+            overflow-y: auto;
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .day-item {
+            background: white;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .day-item:hover {
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transform: translateX(5px);
+        }
+
+        .day-item.active {
+            background: #667eea;
+            color: white;
+            border-left-color: #764ba2;
+        }
+
+        .day-title {
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-bottom: 8px;
+        }
+
+        .day-details {
+            font-size: 0.9em;
+            opacity: 0.7;
+            line-height: 1.6;
+        }
+
+        .day-item.active .day-details {
+            opacity: 0.9;
+        }
+
+        .location-list {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .location-list p {
+            font-size: 0.85em;
+            color: #666;
+            margin: 5px 0;
+        }
+
+        .legend {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .legend-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin: 8px 0;
+            font-size: 0.9em;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .checklist {
+            margin-top: 20px;
+            padding: 20px;
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            border-radius: 8px;
+        }
+
+        .checklist-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .checklist-item {
+            font-size: 0.9em;
+            margin: 5px 0;
+            color: #555;
+        }
+
+        @media (max-width: 1024px) {
+            .main-content {
+                flex-direction: column;
+                height: auto;
+            }
+
+            .sidebar {
+                width: 100%;
+                max-height: 400px;
+            }
+
+            #map {
+                height: 500px;
+            }
+        }
+
+        .info-box {
+            background: #e7f3ff;
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 15px;
+            font-size: 0.9em;
+            line-height: 1.6;
+        }
+
+        .weather-info {
+            background: #fff8e1;
+            border-left: 4px solid #ff9800;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 10px;
+            font-size: 0.85em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🗺️ 新墨西哥 行程地图</h1>
+            <p>2025年11月25日-29日 | 2人自驾游</p>
+        </div>
+
+        <div class="main-content">
+            <div id="map"></div>
+            
+            <div class="sidebar">
+                <div style="margin-bottom: 20px;">
+                    <h3 style="color: #667eea; margin-bottom: 10px;">📅 行程安排</h3>
+                </div>
+
+                <div class="day-item active" onclick="selectDay(0)">
+                    <div class="day-title">Day 1 - 11/25 Tue</div>
+                    <div class="day-details">ABQ → White Sands 日落</div>
+                    <div class="location-list">
+                        <p>📍 起点：ABQ机场 (35.04, -106.61)</p>
+                        <p>📍 终点：Alamogordo (32.90, -106.46)</p>
+                        <p>🚗 距离：223 mi (3.5-4h)</p>
+                    </div>
+                    <div class="weather-info">
+                        <strong>天气：</strong>晴朗<br>
+                        <strong>温度：</strong>58-66°F (14-19°C)
+                    </div>
+                </div>
+
+                <div class="day-item" onclick="selectDay(1)">
+                    <div class="day-title">Day 2 - 11/26 Wed</div>
+                    <div class="day-details">Alamogordo → Carlsbad → Roswell</div>
+                    <div class="location-list">
+                        <p>📍 Carlsbad Caverns (32.18, -104.44)</p>
+                        <p>📍 Roswell (33.39, -104.53)</p>
+                        <p>🚗 总距离：~4.5h</p>
+                    </div>
+                    <div class="weather-info">
+                        <strong>天气：</strong>晴朗<br>
+                        <strong>温度：</strong>63-66°F (17-19°C)
+                    </div>
+                </div>
+
+                <div class="day-item" onclick="selectDay(2)">
+                    <div class="day-title">Day 3 - 11/27 Thu</div>
+                    <div class="day-details">Roswell → ABQ (感恩节)</div>
+                    <div class="location-list">
+                        <p>📍 Sandia Peak Tram (35.19, -106.49)</p>
+                        <p>📍 Old Town ABQ (35.08, -106.65)</p>
+                        <p>🚗 距离：190 mi (3h)</p>
+                    </div>
+                    <div class="weather-info">
+                        <strong>天气：</strong>晴朗<br>
+                        <strong>温度：</strong>49-54°F (9-12°C)
+                    </div>
+                </div>
+
+                <div class="day-item" onclick="selectDay(3)">
+                    <div class="day-title">Day 4 - 11/28 Fri</div>
+                    <div class="day-details">ABQ → Santa Fe 一日游</div>
+                    <div class="location-list">
+                        <p>📍 Santa Fe Plaza (35.69, -105.94)</p>
+                        <p>📍 Meow Wolf (35.65, -105.99)</p>
+                        <p>🚗 单程：65 mi (1h)</p>
+                    </div>
+                    <div class="weather-info">
+                        <strong>天气：</strong>晴朗<br>
+                        <strong>温度：</strong>49-54°F (9-12°C)
+                    </div>
+                </div>
+
+                <div class="day-item" onclick="selectDay(4)">
+                    <div class="day-title">Day 5 - 11/29 Sat</div>
+                    <div class="day-details">ABQ 市区 → 还车 → 返回</div>
+                    <div class="location-list">
+                        <p>📍 Old Town / Nob Hill</p>
+                        <p>📍 ABQ 机场还车</p>
+                        <p>✈️ 晚航返回费城</p>
+                    </div>
+                    <div class="weather-info">
+                        <strong>天气：</strong>晴朗<br>
+                        <strong>温度：</strong>49-54°F (9-12°C)
+                    </div>
+                </div>
+
+                <div class="legend">
+                    <div class="legend-title">图例</div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #FF6B6B;"></div>
+                        <span>Day 1 路线</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #4ECDC4;"></div>
+                        <span>Day 2 路线</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #45B7D1;"></div>
+                        <span>Day 3 路线</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #FFA07A;"></div>
+                        <span>Day 4 路线</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #98D8C8;"></div>
+                        <span>住宿地点</span>
+                    </div>
+                </div>
+
+                <div class="checklist">
+                    <div class="checklist-title">✅ 出发前检查清单</div>
+                    <div class="checklist-item">☐ Carlsbad Caverns 门票</div>
+                    <div class="checklist-item">☐ Sandia Peak Tram 预约</div>
+                    <div class="checklist-item">☐ 离线地图已下载</div>
+                    <div class="checklist-item">☐ 防晒霜 & 墨镜</div>
+                    <div class="checklist-item">☐ 羽绒服/厚外套</div>
+                    <div class="checklist-item">☐ 租车确认信息</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 初始化地图，centered on New Mexico
+        const map = L.map('map').setView([33.5, -106.0], 7);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors',
+            maxZoom: 19
+        }).addTo(map);
+
+        // 定义关键地点
+        const locations = {
+            abq_airport: { coords: [35.04, -106.61], name: 'ABQ 机场', type: 'airport' },
+            white_sands: { coords: [32.78, -106.17], name: 'White Sands', type: 'attraction' },
+            alamogordo: { coords: [32.90, -106.46], name: 'Alamogordo Hotel', type: 'hotel' },
+            cloudcroft: { coords: [32.37, -105.77], name: 'Cloudcroft', type: 'town' },
+            carlsbad: { coords: [32.18, -104.44], name: 'Carlsbad Caverns', type: 'attraction' },
+            roswell: { coords: [33.39, -104.53], name: 'Roswell Inn', type: 'hotel' },
+            sandia_base: { coords: [35.19, -106.49], name: 'Sandia Peak Tram', type: 'attraction' },
+            old_town: { coords: [35.08, -106.65], name: 'Old Town ABQ', type: 'neighborhood' },
+            airbnb: { coords: [35.09, -106.66], name: 'Airbnb (ABQ)', type: 'hotel' },
+            santa_fe: { coords: [35.69, -105.94], name: 'Santa Fe Plaza', type: 'attraction' },
+            meow_wolf: { coords: [35.65, -105.99], name: 'Meow Wolf', type: 'attraction' }
+        };
+
+        // 添加标记
+        const markers = {};
+        const markerColors = {
+            airport: '#FF4444',
+            hotel: '#4CAF50',
+            attraction: '#2196F3',
+            town: '#FFC107',
+            neighborhood: '#9C27B0'
+        };
+
+        Object.entries(locations).forEach(([key, loc]) => {
+            const color = markerColors[loc.type];
+            const icon = L.divIcon({
+                className: 'custom-marker',
+                html: `<div style="background-color: ${color}; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; border: 3px solid white; box-shadow: 0 2px 6px rgba(0,0,0,0.3);">📍</div>`,
+                iconSize: [30, 30],
+                popupAnchor: [0, -15]
+            });
+
+            const marker = L.marker(loc.coords, { icon: icon })
+                .bindPopup(`<strong>${loc.name}</strong><br/>坐标: ${loc.coords[0].toFixed(4)}, ${loc.coords[1].toFixed(4)}`)
+                .addTo(map);
+            
+            markers[key] = marker;
+        });
+
+        // 绘制路线
+        const routes = [
+            {
+                day: 0,
+                coords: [[35.04, -106.61], [32.78, -106.17], [32.90, -106.46]],
+                color: '#FF6B6B',
+                name: 'Day 1: ABQ → White Sands → Alamogordo'
+            },
+            {
+                day: 1,
+                coords: [[32.90, -106.46], [32.37, -105.77], [32.18, -104.44], [33.39, -104.53]],
+                color: '#4ECDC4',
+                name: 'Day 2: Alamogordo → Carlsbad → Roswell'
+            },
+            {
+                day: 2,
+                coords: [[33.39, -104.53], [35.19, -106.49], [35.08, -106.65]],
+                color: '#45B7D1',
+                name: 'Day 3: Roswell → ABQ'
+            },
+            {
+                day: 3,
+                coords: [[35.09, -106.66], [35.69, -105.94], [35.09, -106.66]],
+                color: '#FFA07A',
+                name: 'Day 4: ABQ ↔ Santa Fe'
+            }
+        ];
+
+        const polylines = {};
+        routes.forEach((route, index) => {
+            const polyline = L.polyline(route.coords, {
+                color: route.color,
+                weight: 3,
+                opacity: 0.7,
+                dashArray: '5, 5'
+            }).addTo(map);
+            polylines[route.day] = polyline;
+        });
+
+        // 处理日期选择
+        function selectDay(dayIndex) {
+            // 更新样式
+            document.querySelectorAll('.day-item').forEach((el, i) => {
+                el.classList.toggle('active', i === dayIndex);
+            });
+
+            // 更新地图聚焦
+            const routesForDay = routes.filter(r => r.day === dayIndex);
+            if (routesForDay.length > 0) {
+                const allCoords = routesForDay[0].coords;
+                const bounds = L.latLngBounds(allCoords);
+                map.fitBounds(bounds, { padding: [50, 50], maxZoom: 10 });
+            }
+        }
+
+        // 默认选择第一天
+        selectDay(0);
+
+        // 响应式调整
+        window.addEventListener('resize', () => {
+            setTimeout(() => map.invalidateSize(), 100);
+        });
+    </script>
+</body>
+</html>
